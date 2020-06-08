@@ -1,5 +1,5 @@
 # Hashinator
-An executable jar that generates a file's MD5, SHA-1 and CRC32 checksums. It takes 2.06 minutes30 seconds on a 1.35Gb file.
+An executable jar that generates a file's MD5, SHA-1 and CRC32 checksums. It takes 30 seconds on a 1.35Gb file.
 
 ## Changelog
 * V1.2: Reduced computing time on a 1.35Gb file from 2:06 to 0:30 by calculating all three hashes at the same time instead of opening the file and calculating the hashes one-by-one
