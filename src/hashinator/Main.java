@@ -4,6 +4,7 @@ package hashinator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.DatatypeConverter;
@@ -14,17 +15,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import java.util.zip.CRC32;
+
 public class Main {
 	
 	public static String md5Hashh;
 	public static String sha1Hashh;
+	public static String crc32Hashh;
 	public static String f;
 
 	public static void main(String args[]) throws NoSuchAlgorithmException, IOException {
 		
 		JFrame frame = new JFrame("Hashinator v1.0");
 	    JLabel md5Hash = new JLabel("(MD5 hash)");
-	    //JLabel sha1Hash = new JLabel("SHA-1 hash");
+	    JLabel sha1Hash = new JLabel("(SHA-1 hash)");
+	    JLabel crc32Hash = new JLabel("(CRC32 hash)");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(300,100);
 		
@@ -45,9 +50,12 @@ public class Main {
 	        public void actionPerformed(ActionEvent e){
 	    		try {
 					genMD5(f);
-					md5Hash.setText(md5Hashh);
-					//genSHA1(file);
-					//sha1Hash.setText(sha1Hashh);
+					md5Hash.setText("MD5: " + md5Hashh);
+					genSHA1(f);
+					sha1Hash.setText("SHA-1: " + sha1Hashh);
+					gencrc32(f);
+					crc32Hash.setText("CRC32: "+ crc32Hashh);
+					frame.setSize(360,150);
 				} catch (NoSuchAlgorithmException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -67,13 +75,34 @@ public class Main {
 		frame.add(selectFile);
 		frame.add(calcHashes);
 		frame.add(md5Hash);
-		//frame.add(sha1Hash);
+		frame.add(sha1Hash);
+		frame.add(crc32Hash);
 		
 		frame.setVisible(true);
 		
 		
 	}
-	
+	public static void gencrc32(String path) throws NoSuchAlgorithmException, IOException{
+		CRC32 crc = new CRC32();
+		File f = new File(path);
+		try (FileInputStream inputStream = new FileInputStream(f)) {
+	 
+	        byte[] bytesBuffer = new byte[1024];
+	        int bytesRead = -1;
+	 
+	        while ((bytesRead = inputStream.read(bytesBuffer)) != -1) {
+	            crc.update(bytesBuffer, 0, bytesRead);
+	        }
+	        
+	        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);	//Convert from long to byte array
+	        buffer.putLong(crc.getValue());
+	        
+	        byte[] hashedBytes = buffer.array();
+			crc32Hashh = DatatypeConverter.printHexBinary(hashedBytes);
+	        System.out.println("File CRC32 = " + crc32Hashh);
+		}
+		
+	}
 	
 	public static void genMD5(String path) throws NoSuchAlgorithmException, IOException{
 		File f = new File(path);
