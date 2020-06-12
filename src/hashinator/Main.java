@@ -23,10 +23,11 @@ public class Main {
 	public static String sha1Hashh;
 	public static String crc32Hashh;
 	public static String f;
+	public static String s = "";
 
 	public static void main(String args[]) throws NoSuchAlgorithmException, IOException {
 		
-		JFrame frame = new JFrame("Hashinator v1.2");
+		JFrame frame = new JFrame("Hashinator v1.3");
 	    JLabel md5Hash = new JLabel("(MD5 hash)");
 	    JLabel sha1Hash = new JLabel("(SHA-1 hash)");
 	    JLabel crc32Hash = new JLabel("(CRC32 hash)");
@@ -55,7 +56,16 @@ public class Main {
 					//genSHA1(f);
 					sha1Hash.setText("SHA-1: " + sha1Hashh);
 					//gencrc32(f);
-					crc32Hash.setText("CRC32: "+ crc32Hashh);
+					
+					
+					
+					for(int i = 8; i<=15; i++) {
+						s = s + String.valueOf(crc32Hashh.charAt(i));
+					}
+					
+					crc32Hash.setText("CRC32: " + s);
+					
+					//crc32Hash.setText("CRC32: "+ crc32Hashh);
 					frame.setSize(360,150);
 				} catch (NoSuchAlgorithmException e1) {
 					// TODO Auto-generated catch block
@@ -116,7 +126,7 @@ public class Main {
 	        System.out.println("File SHA-1 = " + sha1Hashh);
 		}
 	}
-	
+	/*
 	public static void gencrc32(String path) throws NoSuchAlgorithmException, IOException{
 		CRC32 crc = new CRC32();
 		File f = new File(path);
@@ -179,5 +189,5 @@ public class Main {
 		        String hash = DatatypeConverter.printHexBinary(hashedBytes);
 		        System.out.println("File SHA1 : " + hash);
 		    }
-	}
+	}*/
 }
